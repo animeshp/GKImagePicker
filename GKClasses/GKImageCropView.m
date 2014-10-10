@@ -16,7 +16,7 @@
 
 static CGRect GKScaleRect(CGRect rect, CGFloat scale)
 {
-	return CGRectMake(rect.origin.x * scale, rect.origin.y * scale, rect.size.width * scale, rect.size.height * scale);
+    return CGRectMake(rect.origin.x * scale, rect.origin.y * scale, rect.size.width * scale, rect.size.height * scale);
 }
 
 @interface ScrollView : UIScrollView
@@ -148,7 +148,7 @@ static CGRect GKScaleRect(CGRect rect, CGFloat scale)
     return self.imageView;
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
     if ([self.delegate respondsToSelector:@selector(scrollViewDidEndZooming:withView:atScale:)]) {
         [self.delegate scrollViewDidEndZooming:scrollView withView:view atScale:scale];

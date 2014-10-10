@@ -109,7 +109,7 @@
         123./255., 125/255., 132./255., 1.
     };
     
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(320, 54), YES, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(CGRectGetWidth(self.view.frame), 54), YES, 0.0);
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -190,7 +190,7 @@
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
     
-    self.toolbar.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 54, 320, 54);
+    self.toolbar.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 54, CGRectGetWidth(self.view.frame), 54);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -200,7 +200,7 @@
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
     if (self.isReturning && !self.imageCropView.scrollView.isZooming && !self.imageCropView.scrollView.isZoomBouncing && !self.imageCropView.scrollView.isDragging && !self.imageCropView.scrollView.isDecelerating) {
         [self.delegate imageCropController:self didFinishWithCrop:self.imageCropView.crop];
