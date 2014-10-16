@@ -97,6 +97,8 @@ static CGRect GKScaleRect(CGRect rect, CGFloat scale)
         self.scrollView.contentSize = imageToCrop.size;
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
+        self.scrollView.alwaysBounceHorizontal = YES;
+        self.scrollView.alwaysBounceVertical = YES;
         self.scrollView.delegate = self;
         self.scrollView.clipsToBounds = NO;
         self.scrollView.decelerationRate = 0.0;
@@ -117,6 +119,9 @@ static CGRect GKScaleRect(CGRect rect, CGFloat scale)
         } else {
             self.scrollView.minimumZoomScale = cropSize.height / imageToCrop.size.height;
             self.scrollView.maximumZoomScale = fmaxf(self.scrollView.maximumZoomScale, cropSize.width / imageToCrop.size.width);
+        }
+        if (self.scrollView.minimumZoomScale == self.scrollView.maximumZoomScale) {
+            self.scrollView.maximumZoomScale += .00000000001;
         }
         self.scrollView.zoomScale = cropSize.height / crop.size.height;
         
