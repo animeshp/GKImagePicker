@@ -63,8 +63,6 @@
 
 - (void)_setupCropView{
     CGRect frame = self.view.bounds;
-    CGFloat toolbarSize = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 0 : 54;
-    frame.size.height -= toolbarSize;
     self.imageCropView = [[GKImageCropView alloc] initWithFrame:frame imageToCrop:self.sourceImage crop:self.crop cropSize:self.cropSize minimumCropSize:self.minimumCropSize];
     [self.view addSubview:self.imageCropView];
 }
@@ -73,15 +71,11 @@
     
     self.cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [self.cancelButton setBackgroundImage:[[UIImage imageNamed:@"PLCameraSheetButton.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0] forState:UIControlStateNormal];
-    [self.cancelButton setBackgroundImage:[[UIImage imageNamed:@"PLCameraSheetButtonPressed.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0] forState:UIControlStateHighlighted];
-    
-    [[self.cancelButton titleLabel] setFont:[UIFont boldSystemFontOfSize:11]];
-    [[self.cancelButton titleLabel] setShadowOffset:CGSizeMake(0, 1)];
-    [self.cancelButton setFrame:CGRectMake(0, 0, 50, 30)];
-    [self.cancelButton setTitle:NSLocalizedString(@"GKIcancel",@"") forState:UIControlStateNormal];
-    [self.cancelButton setTitleColor:[UIColor colorWithRed:0.173 green:0.176 blue:0.176 alpha:1] forState:UIControlStateNormal];
-    [self.cancelButton setTitleShadowColor:[UIColor colorWithRed:0.827 green:0.831 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [[self.cancelButton titleLabel] setFont:[UIFont systemFontOfSize:16]];
+    [[self.cancelButton titleLabel] setShadowOffset:CGSizeMake(0, -1)];
+    [self.cancelButton setFrame:CGRectMake(0, 0, 58, 30)];
+    [self.cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
+    [self.cancelButton setTitleShadowColor:[UIColor colorWithRed:0.118 green:0.247 blue:0.455 alpha:1] forState:UIControlStateNormal];
     [self.cancelButton  addTarget:self action:@selector(_actionCancel) forControlEvents:UIControlEventTouchUpInside];
     
 }
@@ -90,13 +84,10 @@
     
     self.useButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
-    [self.useButton setBackgroundImage:[[UIImage imageNamed:@"PLCameraSheetDoneButton.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0] forState:UIControlStateNormal];
-    [self.useButton setBackgroundImage:[[UIImage imageNamed:@"PLCameraSheetDoneButtonPressed.png"] stretchableImageWithLeftCapWidth:5 topCapHeight:0] forState:UIControlStateHighlighted];
-    
-    [[self.useButton titleLabel] setFont:[UIFont boldSystemFontOfSize:11]];
+    [[self.useButton titleLabel] setFont:[UIFont systemFontOfSize:16]];
     [[self.useButton titleLabel] setShadowOffset:CGSizeMake(0, -1)];
-    [self.useButton setFrame:CGRectMake(0, 0, 50, 30)];
-    [self.useButton setTitle:NSLocalizedString(@"GKIuse",@"") forState:UIControlStateNormal];
+    [self.useButton setFrame:CGRectMake(0, 0, 58, 30)];
+    [self.useButton setTitle:@"Choose" forState:UIControlStateNormal];
     [self.useButton setTitleShadowColor:[UIColor colorWithRed:0.118 green:0.247 blue:0.455 alpha:1] forState:UIControlStateNormal];
     [self.useButton  addTarget:self action:@selector(_actionUse) forControlEvents:UIControlEventTouchUpInside];
     
@@ -127,30 +118,41 @@
 }
 
 - (void)_setupToolbar{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
-        [self.toolbar setBackgroundImage:[self _toolbarBackgroundImage] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-        [self.view addSubview:self.toolbar];
+    self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+    self.toolbar.translucent = YES;
+    self.toolbar.barStyle = UIBarStyleBlackOpaque;
+    [self.view addSubview:self.toolbar];
+    
+    [self _setupCancelButton];
+    [self _setupUseButton];
+    
         
-        [self _setupCancelButton];
-        [self _setupUseButton];
-        
-        UILabel *info = [[UILabel alloc] initWithFrame:CGRectZero];
+//        [NSLocalizedString(@"GKImoveAndScale", @"") drawInRect:CGRectMake(10, (height - heightSpan) + (heightSpan / 2 - 20 / 2) , width - 20, 20)
+//                                                      withFont:[UIFont boldSystemFontOfSize:20]
+//                                                 lineBreakMode:NSLineBreakByTruncatingTail
+//                                                     alignment:NSTextAlignmentCenter];
+//        
+//    }
+    
+    UILabel *info = [[UILabel alloc] initWithFrame:CGRectZero];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         info.text = NSLocalizedString(@"GKImoveAndScale", @"");
-        info.textColor = [UIColor colorWithRed:0.173 green:0.173 blue:0.173 alpha:1];
-        info.backgroundColor = [UIColor clearColor];
-        info.shadowColor = [UIColor colorWithRed:0.827 green:0.831 blue:0.839 alpha:1];
-        info.shadowOffset = CGSizeMake(0, 1);
-        info.font = [UIFont boldSystemFontOfSize:18];
-        [info sizeToFit];
-        
-        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithCustomView:self.cancelButton];
-        UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *lbl = [[UIBarButtonItem alloc] initWithCustomView:info];
-        UIBarButtonItem *use = [[UIBarButtonItem alloc] initWithCustomView:self.useButton];
-        
-        [self.toolbar setItems:[NSArray arrayWithObjects:cancel, flex, lbl, flex, use, nil]];
+    } else {
+        info.text = @"";
     }
+    info.textColor = [UIColor whiteColor];
+    info.backgroundColor = [UIColor clearColor];
+    info.shadowColor = [UIColor colorWithRed:0.118 green:0.247 blue:0.455 alpha:1];
+    info.shadowOffset = CGSizeMake(0, -1);
+    info.font = [UIFont boldSystemFontOfSize:18];
+    [info sizeToFit];
+    
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithCustomView:self.cancelButton];
+    UIBarButtonItem *flex = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *lbl = [[UIBarButtonItem alloc] initWithCustomView:info];
+    UIBarButtonItem *use = [[UIBarButtonItem alloc] initWithCustomView:self.useButton];
+    
+    [self.toolbar setItems:[NSArray arrayWithObjects:cancel, flex, lbl, flex, use, nil]];
 }
 
 #pragma mark -
@@ -171,11 +173,7 @@
     [self _setupCropView];
     [self _setupToolbar];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self.navigationController setNavigationBarHidden:YES];
-    } else {
-		[self.navigationController setNavigationBarHidden:NO];
-	}
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewDidUnload{
