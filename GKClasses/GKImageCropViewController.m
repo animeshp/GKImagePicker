@@ -55,7 +55,7 @@
                                                                                           action:@selector(_actionCancel)];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"GKIuse", @"")
-                                                                              style:UIBarButtonItemStyleBordered
+                                                                              style:UIBarButtonItemStylePlain
                                                                              target:self
                                                                              action:@selector(_actionUse)];
 }
@@ -100,15 +100,15 @@
         123./255., 125/255., 132./255., 1.
     };
     
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(CGRectGetWidth(self.view.frame), 54), YES, 0.0);
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(CGRectGetWidth(self.view.frame), 50), YES, 0.0);
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGGradientRef gradient = CGGradientCreateWithColorComponents(colorSpace, components, NULL, 2);
     CGColorSpaceRelease(colorSpace);
     
-    CGContextDrawLinearGradient(ctx, gradient, CGPointMake(0, 0), CGPointMake(0, 54), kCGImageAlphaNoneSkipFirst);
-    
+    CGContextDrawLinearGradient(ctx, gradient, CGPointZero, CGPointMake(0, 50), nil);
+        
     UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
 	
 	CGGradientRelease(gradient);
@@ -188,7 +188,11 @@
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
     
-    self.toolbar.frame = CGRectMake(0, CGRectGetHeight(self.view.frame) - 54, CGRectGetWidth(self.view.frame), 54);
+    if (@available(iOS 11.0, *)) {
+        self.toolbar.frame = CGRectMake(0, self.view.safeAreaLayoutGuide.layoutFrame.size.height - 50, self.view.frame.size.width, 50);
+    } else {
+        self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 50);
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
