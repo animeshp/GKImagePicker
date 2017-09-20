@@ -189,7 +189,7 @@
     [super viewWillLayoutSubviews];
     
     if (@available(iOS 11.0, *)) {
-        self.toolbar.frame = CGRectMake(0, self.view.safeAreaLayoutGuide.layoutFrame.size.height - 50, self.view.frame.size.width, 50);
+        self.toolbar.frame = CGRectMake(0, self.view.safeAreaLayoutGuide.layoutFrame.size.height - 50 + self.view.safeAreaLayoutGuide.layoutFrame.origin.y, self.view.frame.size.width, 50);
     } else {
         self.toolbar.frame = CGRectMake(0, self.view.frame.size.height - 50, self.view.frame.size.width, 50);
     }
